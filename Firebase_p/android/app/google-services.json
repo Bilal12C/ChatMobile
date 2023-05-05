@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "519717388817",
+    "project_id": "officefirebase-61c6c",
+    "storage_bucket": "officefirebase-61c6c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519717388817:android:c2e9464f4af0df21fea7b0",
+        "android_client_info": {
+          "package_name": "com.firebasep"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "519717388817-p6gni5p5tqlsv19ic1mj788cfoo0silc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.firebasep",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "519717388817-s30cuoufdi04hhsvckicss3nf20p5cvu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbJf1aNcaeKEkCQJmn8cIzfLvnBV4zdU0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "519717388817-s30cuoufdi04hhsvckicss3nf20p5cvu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
