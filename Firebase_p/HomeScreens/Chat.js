@@ -43,12 +43,11 @@ const Chat = ({ route, navigation }) => {
           from: userdata._id,
           to: chat._id
         })
-        console.log("respose", respose)
         setMessages(respose.data)
       }
 
     }
-    // GetAllMessages();
+    GetAllMessages();
   }, [chat])
 
 
@@ -56,24 +55,25 @@ const Chat = ({ route, navigation }) => {
   const handleSendMsg = async () => {
     const data = await AsyncStorage.getItem('key')
     const userdata = JSON.parse(data)
-    // const Info = await axios.post(sendMessageRoute, {
-    //   from: userdata._id,
-    //   to: chat._id,
-    //   message: msg,
-    // });
+    const Info = await axios.post(sendMessageRoute, {
+      from: userdata._id,
+      to: chat._id,
+      message: msg,
+    });
 
     socket.current.emit('send-msg', {
       to: chat._id,
       from: userdata._id,
       message: msg,
-      type: 'msg'
+      // type: 'msg'
     })
     const msgs = [...messages]
-    msgs.push({ fromSelf: true, message: msg, type: 'msg' })
+    msgs.push({ fromSelf: true, message: msg,  })
+    // type: 'msg'
     setMessages(msgs)
-    console.log("messages", messages)
+    // console.log("messages", messages)
     setMsg('')
-    SetIcon(false)
+    // SetIcon(false)
   };
 
 
@@ -107,23 +107,27 @@ const Chat = ({ route, navigation }) => {
     flatListRef.current.scrollToEnd();
   };
 
-  useEffect(() => {
-    if (!PlayWidth) {
-      PlayWidth = 0;
-    }
-  }, [])
-
   // useEffect(() => {
-  //   if (socket.current) {
-  //     socket.current.on("msg-recieve", (data) => {
-  //       console.log("arrived msg", data)
-  //       setArrivalmsg({ fromSelf: false, message: data.message, type: data.type });
-  //     })
+  //   if (!PlayWidth) {
+  //     PlayWidth = 0;
   //   }
   // }, [])
 
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on("msg-recieve", (data) => {
+        console.log("arrived msg", data)
+        setArrivalmsg({ fromSelf: false, message: data });
+      })
+    }
+  }, [])
+
+
+
   const onStartPlay = async (audio) => {
     try {
+     
+
       console.log("path",audio)
       const msg = await audioRecorderPlayer.startPlayer(audio.message);
       audioRecorderPlayer.setVolume(1.0)
@@ -168,7 +172,7 @@ const Chat = ({ route, navigation }) => {
   }
 
 
-
+  
   useEffect(() => {
     arrivalmessages && setMessages((prev) => [...prev, arrivalmessages])
   }, [arrivalmessages])
@@ -191,13 +195,36 @@ const Chat = ({ route, navigation }) => {
       <View style={styles.Header}>
         <IonicIcon onPress={() => navigation.navigate('Home')} style={{ paddingRight: 10 }} name='arrow-back-outline' size={20} color={'white'} />
         <Text style={{ color: 'white', fontSize: 20 }}>{chat.name}</Text>
-        <Pressable onPress={() => navigation.navigate('Audio', { user: chat, socket: socket })} style={{ justifyContent: 'flex-end' }}>
+        {/* <Pressable onPress={() => navigation.navigate('Audio', { user: chat, socket: socket })} style={{ justifyContent: 'flex-end' }}>
           <Text style={{ color: 'white' }}>Send Voice note</Text>
-        </Pressable>
+        </Pressable> */}
       </View>
 
 
+      {
+        messages.length > 0 ? (
+          <FlatList
+            keyExtractor={(item, index) => index.toString()}
+            data={messages}
+            style={{marginBottom:40}}
+            onContentSizeChange={handleContentSizeChange}
+            ref={flatListRef}
+            renderItem={({ item, index }) => (
+              <Pressable  key={item.id}>
+              <View style={item.fromSelf == true  ? {alignSelf:'flex-end'}:{alignSelf:'flex-start'}}>
+                <Text style={item.fromSelf == true ? styles.sendmessage:styles.recievemessage}>{item.message}</Text>
+                </View>
+              </Pressable>
+            )}
+          />
 
+        ) : (
+          null
+        )
+        
+      }
+
+{/* 
       {
         messages.length > 0 ? (
           <FlatList
@@ -232,7 +259,9 @@ const Chat = ({ route, navigation }) => {
           null
         )
 
-      }
+      } */}
+
+
 
       <View style={styles.ChatInputView}>
         <TextInput
@@ -243,7 +272,7 @@ const Chat = ({ route, navigation }) => {
           placeholderTextColor={'white'}
           onChangeText={(value) => { onchangevalue(value) }}
         />
-        <Pressable style={isRecording ? styles.VoiceSend : styles.SendIcon} onLongPress={onStartRecord} onPressOut={isRecording ? SendVoice : handleSendMsg}  >
+        <Pressable onPress={handleSendMsg} style={isRecording ? styles.VoiceSend : styles.SendIcon}  >
           <IonicIcon name={icon ? 'send-sharp' : 'mic'} size={20} color={'white'} />
         </Pressable>
       </View>
@@ -265,7 +294,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    // justifyContent: 'space-between'
   },
   ChatInputView: {
     paddingVertical: 10,

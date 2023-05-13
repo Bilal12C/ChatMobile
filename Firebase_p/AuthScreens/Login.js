@@ -5,6 +5,7 @@ import { Height } from '../Dimensions/ProjectDimension';
 import { loginRoute } from '../utils/Apiroutes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import tailwind from 'twrnc'
 const Login = ({navigation}) => {
   
   
@@ -47,58 +48,38 @@ const Login = ({navigation}) => {
   }
 
   return (
-    <KeyboardAvoidingView style={GlobalStyles.KeyboardAvoidingView} behavior='height'>
-       <View style={GlobalStyles.MainView}>
-       <View style={{alignItems:'center'}}>
-          <Image
-            source={require('../Assets/ReactIcon.png')}
-            style={{
-              width: '50%',
-              resizeMode: 'contain',
-            }}
-          />
+    <View style={tailwind`flex-1 items-center justify-center bg-black`}>
+    <View style={tailwind`p-8 w-full max-w-sm`}>
+      <Text style={tailwind`text-5xl font-bold mb-6 text-white`}>Login</Text>
+
+      <TextInput
+        style={tailwind`w-full bg-white rounded-md h-12 px-4 mb-4 text-black`}
+        placeholderTextColor="#000"
+        placeholder="Enter Name"
+        value={User.name}
+        onChangeText={(val)=>SetHandleText('name',val)}
+
+      />
+
+      <TextInput
+        style={tailwind`w-full bg-white rounded-md h-12 px-4 mb-6 text-black`}
+        placeholderTextColor="#000"
+        placeholder="Enter password"
+        value={User.Password}
+        onChangeText={(val)=>SetHandleText('Password',val)}
+      />
+
+    
+      <Pressable
+        style={tailwind`h-12 border-2 border-white rounded-md flex flex-row justify-center items-center px-6 `}
+        onPress={Loginfun}
+      >
+        <View style={tailwind`flex-1 flex items-center`}>
+          <Text style={tailwind`text-white text-base font-medium`}>Login</Text>
         </View>
-        <View style={GlobalStyles.SectionStyle}>
-            <TextInput
-              style={GlobalStyles.inputStyle}
-              underlineColorAndroid="#f000"
-              placeholder="Enter Username"
-              placeholderTextColor="white" 
-              autoCapitalize="sentences"
-              returnKeyType="next"
-              blurOnSubmit={false}
-              value={User.name}
-              onChangeText={(val)=>SetHandleText('name',val)}
-            />
-          </View>
-          <View style={GlobalStyles.SectionStyle}>
-            <TextInput
-              style={GlobalStyles.inputStyle}
-              underlineColorAndroid="#f000"
-              placeholder="Enter Password"
-              placeholderTextColor="white"
-              blurOnSubmit={false}
-              secureTextEntry={true}
-              value={User.Password}
-              onChangeText={(val)=>SetHandleText('Password',val)}
-            />
-          </View>
-          <TouchableOpacity
-            style={GlobalStyles.buttonStyle}
-            activeOpacity={0.5}
-            onPress={Loginfun}
-            >
-            <Text style={GlobalStyles.buttonTextStyle}>Sign in</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={GlobalStyles.buttonStyle}
-            activeOpacity={0.5}
-            onPress={()=>navigation.navigate('Signup')}
-            >
-            <Text style={GlobalStyles.buttonTextStyle}>Sign Up</Text>
-          </TouchableOpacity>
-        </View>
-    </KeyboardAvoidingView>
+      </Pressable>
+    </View>
+  </View>
   )
 }
 

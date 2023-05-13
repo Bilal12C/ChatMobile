@@ -10,6 +10,7 @@ import Signup from '../AuthScreens/Signup';
 import Chat from '../HomeScreens/Chat';
 import Home from '../HomeScreens/Home';
 import Audio from '../HomeScreens/Audio';
+import UserProfile from '../HomeScreens/Profile';
 
 const HomeS = createNativeStackNavigator();
 const Auth = createNativeStackNavigator();
@@ -58,6 +59,7 @@ const Homestack =  () => {
       <HomeS.Screen name='Home' component={Home}/>
       <HomeS.Screen name='Chat' component={Chat}/>
       <HomeS.Screen name='Audio' component={Audio}/>
+      <HomeS.Screen name='UserProfile' component={UserProfile}/>
       <HomeS.Screen name='Auth' component={AuthStack}/>
     </HomeS.Navigator>
    )

@@ -15,7 +15,7 @@ module.exports = StyleSheet.create({
     },
     inputStyle: {
         height:'80%',
-        width:widthPercentageToDP('70%'),
+        width:'100%',
         color: 'white',
         paddingLeft: 15,
         paddingRight: 15,
@@ -43,6 +43,8 @@ module.exports = StyleSheet.create({
       MainView:{
         flex:1,
         justifyContent:'center',
-        paddingHorizontal:10
+        alignItems:'center',
+        paddingHorizontal:10,
+        backgroundColor:'black'
       }
 });

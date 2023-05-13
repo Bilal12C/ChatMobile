@@ -7,10 +7,10 @@ import axios from 'axios';
 import { io } from 'socket.io-client';
 import IonicIcon from 'react-native-vector-icons/Ionicons';
 import { useRef } from 'react';
-import { logoutRoute } from '../utils/Apiroutes';
-import { widthPercentageToDP , heightPercentageToDP } from 'react-native-responsive-screen';
-
-const Home = ({ navigation }) => {
+import {  heightPercentageToDP } from 'react-native-responsive-screen';
+import { useNavigation } from '@react-navigation/native';
+const Home = () => {
+  let naviagtion   = useNavigation();
   const [currentuser, setcurrentuser] = useState(undefined);
   const socket = useRef();
   const [contacts, setContacts] = useState([]);
@@ -21,7 +21,6 @@ const Home = ({ navigation }) => {
       const data = await AsyncStorage.getItem('key');
       const NEWDATA = JSON.parse(data)
       if (NEWDATA) {
-        console.log("data", NEWDATA)
         setcurrentuser(NEWDATA)
       }
     }
@@ -31,15 +30,12 @@ const Home = ({ navigation }) => {
 
 
   const SetCurrentchat = (item, index) => {
-    console.log("user to chat is", item)
     setCurrentChat(item)
-
-    navigation.navigate('Chat',{user:item,socket:socket})
+    naviagtion.navigate('Chat',{user:item,socket:socket})
     
   }
   useEffect(() => {
     if (currentuser) {
-      console.log("current user is", currentuser._id)
       socket.current = io(host);
       socket.current.emit("add-user", currentuser._id);
     }
@@ -51,22 +47,12 @@ const Home = ({ navigation }) => {
 
   const getAllusers = async () => {
     if (currentuser) {
-      console.log("current user is", currentuser._id)
       const data = await axios.get(`${allUsersRoute}/${currentuser._id}`);
-      console.log("datasfdsdffd", data.data)
       setContacts(data.data)
     }
   }
 
-  const Logout = async () => {
-    const id = currentuser._id;
-    console.log("id",id)
-    const data = await axios.get(`${logoutRoute}/${id}`);
-    if(data.status == 200){
-      AsyncStorage.clear();
-      navigation.navigate("Auth")
-    }
-  }
+ 
 
 
 
@@ -78,7 +64,7 @@ const Home = ({ navigation }) => {
     <View style={{ flex: 1 , backgroundColor :'black'}}>
       <View style={styles.Header}>
         <Text style={{ fontSize: 23, color: 'white'}}>ChatApp</Text>
-        <Pressable onPress={Logout} style={{backgroundColor:'#202C33',padding:10,borderRadius:50}}>
+        <Pressable onPress={()=>naviagtion.navigate('UserProfile')} style={{backgroundColor:'#202C33',padding:10,borderRadius:50}}>
         <IonicIcon name='power-outline' size={20} color={'white'} />
         </Pressable>
       </View>

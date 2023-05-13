@@ -41,25 +41,20 @@ const io = socket(server, {
 
 global.onlineUsers = new Map();
 io.on("connection", (socket) => {
-  global.chatSocket = socket;  socket.on("add-user", (userId) => {
+  global.chatSocket = socket;  
+  socket.on("add-user", (userId) => {
     onlineUsers.set(userId, socket.id);
   });
 
-  socket.on("send-msg", (data) => {
-    const sendUserSocket = onlineUsers.get(data.to);
-    console.log("sendUserSocket",sendUserSocket)
-    if (sendUserSocket) {
-      console.log("data",data)
-      socket.to(sendUserSocket).emit("msg-recieve", data);
-    }  
-  });
 
-  socket.on("send-voice", (data) => {
+  socket.on("send-msg", (data) => {
+    console.log("data to sent",data)
+    console.log("id of user to sent ",onlineUsers.get(data.to))
     const sendUserSocket = onlineUsers.get(data.to);
     if (sendUserSocket) {
-    console.log("datajnbjk",data)
-      socket.to(sendUserSocket).emit("voice-recieve", data.message);
-    }  
+      console.log("is user avalible or not",sendUserSocket)
+      socket.to(sendUserSocket).emit("msg-recieve", data.message);
+    }
   });
 
 

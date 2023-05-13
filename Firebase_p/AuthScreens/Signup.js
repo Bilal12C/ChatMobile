@@ -6,15 +6,16 @@ import {
     Image,
     TouchableOpacity,
     KeyboardAvoidingView,
-    Alert
+    Alert,Pressable
   } from 'react-native';
 import React, { useState } from 'react';
 import { registerRoute } from '../utils/Apiroutes';
-import GlobalStyles from '../GlobalStyles/GlobalStyles';
 import axios from 'axios';
-const Signup = ({navigation}) => {
+import tailwind from 'twrnc';
+import { useNavigation } from '@react-navigation/native';
+const Signup = () => {
   const[User,SetUser]=useState({name:'',email:'',Password:'',ConfirmPassword:''})
-
+  let navigation = useNavigation();
   const HandleInput = (name,val) => {
     SetUser({
       ...User,
@@ -29,11 +30,14 @@ const Signup = ({navigation}) => {
         if(User.Password && User.ConfirmPassword!=''){
           try {
             const {name , email , Password } = User;
+            console.log("usee n",name,email,Password)
             const { data } = await axios.post(registerRoute, {
               name,
               email,
               Password,
             });
+
+            console.log("daata",data)
             if(data.status === true){
               alert(data.msg)
               SetUser({name:'',email:'',Password:'',ConfirmPassword:''})
@@ -48,88 +52,71 @@ const Signup = ({navigation}) => {
         }
       }
     }
+      else{
+        alert("All the Fields should be filled")
+       }
   }
 
  
   return (
-    <KeyboardAvoidingView style={GlobalStyles.KeyboardAvoidingView}  behavior='padding' >
-      <View style={styles.MainViewa}>
-      <View style={{alignItems:'center'}}>
-          <Image
-            source={require('../Assets/ReactIcon.png')}
-            style={{
-              width: '50%',
-              resizeMode: 'contain',
-            }}
-          />
-        </View>
-          <View style={GlobalStyles.SectionStyle}>
-            <TextInput
-              style={GlobalStyles.inputStyle}
-              underlineColorAndroid="#f000"
-              placeholder="Enter Name"
-              placeholderTextColor="white" 
-              autoCapitalize="sentences"
-              returnKeyType="next"
-              blurOnSubmit={false}
-              value={User.name}
-              onChangeText={(val)=>HandleInput('name',val)}
-            />
-          </View>
-          <View style={GlobalStyles.SectionStyle}>
-            <TextInput
-              style={GlobalStyles.inputStyle}
-              underlineColorAndroid="#f000"
-              placeholder="Enter Email"
-              placeholderTextColor="white"
-              keyboardType="email-address"
-              returnKeyType="next"
-              blurOnSubmit={false}
-              value={User.email}
-              onChangeText={(val)=>HandleInput('email',val)}
-            />
-          </View>
-          <View style={GlobalStyles.SectionStyle}>
-            <TextInput
-              style={GlobalStyles.inputStyle}
-              underlineColorAndroid="#f000"
-              placeholder="Enter Password"
-              placeholderTextColor="white"
-              blurOnSubmit={false}
-              value={User.Password}
-              onChangeText={(val)=>HandleInput('Password',val)}
-            />
-          </View>
-          <View style={GlobalStyles.SectionStyle}>
-            <TextInput
-              style={GlobalStyles.inputStyle}
-              placeholder="Confirmed Password"
-              placeholderTextColor="white"
-              blurOnSubmit={false}
-              value={User.ConfirmPassword}
-              onChangeText={(event)=>HandleInput('ConfirmPassword',event)}
-            />
-          
-          </View>
-          {Error!=null?(<Text style={{color:'red',paddingLeft:20}}>{Error}</Text>):null}
-          <TouchableOpacity
-            style={GlobalStyles.buttonStyle}
-            activeOpacity={0.5}
-            onPress={SignupB}
-            >
-            <Text style={GlobalStyles.buttonTextStyle}>Sign Up</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={GlobalStyles.buttonStyle}
-            activeOpacity={0.5}
-            onPress={()=>navigation.navigate('Login')}
-            >
-            <Text style={GlobalStyles.buttonTextStyle}>Sign in</Text>
-          </TouchableOpacity>
-          </View>
-    </KeyboardAvoidingView>
+    <View style={tailwind`flex-1 items-center justify-center bg-black`}>
+    <View style={tailwind`p-8 w-full max-w-sm`}>
+      <Text style={tailwind`text-5xl font-bold mb-6 text-white`}>Signup</Text>
 
-  )
+      <TextInput
+        style={tailwind`w-full bg-white rounded-md h-12 px-4 mb-4 text-black`}
+        placeholderTextColor="#000"
+        placeholder="Enter Name"
+        value={User.name}
+        onChangeText={(val)=>HandleInput('name',val)}
+      />
+
+      <TextInput
+        style={tailwind`w-full bg-white rounded-md h-12 px-4  mb-4 text-black`}
+        placeholderTextColor="#000"
+        placeholder="Enter Email"
+        value={User.email}
+        onChangeText={(val)=>HandleInput('email',val)}
+      />
+
+<TextInput
+        style={tailwind`w-full bg-white rounded-md h-12 px-4 mb-4 text-black`}
+        placeholderTextColor="#000"
+        placeholder="Password"
+        value={User.Password}
+        onChangeText={(val)=>HandleInput('Password',val)}
+      />
+
+<TextInput
+        style={tailwind`w-full bg-white rounded-md h-12 px-4 mb-6 text-black `}
+        placeholderTextColor="#000"
+        placeholder="Confirm Password"
+        value={User.ConfirmPassword}
+        onChangeText={(val)=>HandleInput('ConfirmPassword',val)}
+      />
+
+      
+
+      <Pressable
+        onPress={SignupB}
+        style={tailwind`h-12 border-2 border-white rounded-md flex flex-row justify-center items-center px-6 mb-6 text-black `}
+      >
+        <View style={tailwind`flex-1 flex items-center`}>
+          <Text style={tailwind`text-white text-base font-medium`}>Signup</Text>
+        </View>
+      </Pressable>
+
+      <Pressable
+        onPress={()=>navigation.navigate('Login')}
+        style={tailwind`h-12 border-2 border-white rounded-md flex flex-row justify-center items-center px-6 `}
+      >
+        <View style={tailwind`flex-1 flex items-center`}>
+          <Text style={tailwind`text-white text-base font-medium`}>Login</Text>
+        </View>
+      </Pressable>
+    </View>
+  </View>
+);
 }
 
 export default Signup
@@ -138,7 +125,9 @@ const styles = StyleSheet.create({
       MainViewa:{
         flex:1,
         justifyContent:'center',
-        paddingHorizontal:10
+        paddingHorizontal:10,
+        alignItems:'center',
+        // backgroundColor:'red'
       }
     
 })

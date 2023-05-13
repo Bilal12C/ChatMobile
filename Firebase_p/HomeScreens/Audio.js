@@ -1,11 +1,15 @@
-import { StyleSheet, Text, View, Button, Pressable } from 'react-native'
+import { StyleSheet, Text, View, Button, Pressable,Platform } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
-import { Platform, } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNFetchBlob from 'rn-fetch-blob';
+// import RNFetchBlob from 'rn-fetch-blob';
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const Audio = ({route}) => {
+    useEffect(()=>{
+      console.log("rrrrr",route)
+    },[])
     const [State, SetState] = useState({
         recordSecs: 0,
         recordTime: '00:00:00',
@@ -23,16 +27,27 @@ const Audio = ({route}) => {
     console.log("chat is",chat._id)
     console.log("userdata",userdata._id)
     console.log("file  to sent",path)
-    const result = await socket.current.emit('send-msg',{
+    const result = await socket.current.emit('send-voice',{
         to:chat._id,
         from:userdata._id,
         message:path
     })
     setPath(0)
    }
+
+   
+  const getDocumentDirectoryPath = async () => {
+    if (Platform.OS === 'android') {
+      return `${RNFS.ExternalStorageDirectoryPath}/Documents`;
+    } else if (Platform.OS === 'ios') {
+      return `${RNFS.DocumentDirectoryPath}`;
+    }
+    return null;
+  };
+
       
     const onStartRecord = async () => {
-        const uri = await audioRecorderPlayer.startRecorder();
+        const uri = await audioRecorderPlayer.startRecorder(filePath);
         audioRecorderPlayer.addRecordBackListener((e) => {
           SetState({
             ...State,
@@ -66,9 +81,9 @@ const Audio = ({route}) => {
     
     useEffect(()=>{
         if(socket.current){
-          socket.current.on("msg-recieve",(data)=>{
+          socket.current.on("voice-recieve",(data)=>{
               console.log("arrived msg",data)
-            //   setPath(data)
+              setPath(data)
           })}
       },[path])
 

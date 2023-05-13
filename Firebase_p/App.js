@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react';
-import Pratice from './Pratice';
+import Index from './Stacks/Index';
 const App = () => {
   return (
     <View style={{flex:1}}>
-      <Pratice/>
+      <Index/>
     </View>
   )
 }

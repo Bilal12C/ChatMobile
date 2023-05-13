@@ -5,7 +5,7 @@ const { use } = require("bcrypt/promises");
 module.exports.login = async (req, res, next) => {
   try {
     const { name, Password } = req.body;
-    console.log("sd",name,Password)
+    // console.log("sd",name,Password)
     const user = await User.findOne({ name });
     if (!user)
       return res.json({ msg: "Incorrect Username or Password", status: false });
@@ -28,7 +28,7 @@ module.exports.register = async (req, res, next) => {
           console.log("finduser",finduser)
           console.log(req.body.Password)
           const hash = await bcrypt.hash(req.body.Password,10);
-          console.log("jhas",hash)
+          // console.log("jhas",hash)
          const user = await User.create({
           name: req.body.name,
           email: email,
@@ -51,37 +51,18 @@ module.exports.getAllUsers = async (req, res, next) => {
       "name",
       "_id",
     ]);
-    console.log("user",users)
+    // console.log("user",users)
     return res.json(users);
   } catch (ex) {
     next(ex);
   }
 };
 
-module.exports.setAvatar = async (req, res, next) => {
-  try {
-    const userId = req.params.id;
-    const avatarImage = req.body.image;
-    const userData = await User.findByIdAndUpdate(
-      userId,
-      {
-        isAvatarImageSet: true,
-        avatarImage,
-      },
-      { new: true }
-    );
-    return res.json({
-      isSet: userData.isAvatarImageSet,
-      image: userData.avatarImage,
-    });
-  } catch (ex) {
-    next(ex);
-  }
-};
+
 
 module.exports.logOut = (req, res, next) => {
   try {
-    console.log("Adasd",req.params.id)
+    // console.log("Adasd",req.params.id)
     if (!req.params.id) return res.json({ msg: "User id is required " });
     onlineUsers.delete(req.params.id);
     return res.status(200).send();
