@@ -25,7 +25,9 @@ export default function UserProfile() {
 
       const Logout = async () => {
         const id = currentuser._id;
+        console.log("sdkfnkj",id)
         const data = await axios.get(`${logoutRoute}/${id}`);
+        console.log("data",data)
         if(data.status == 200){
           AsyncStorage.clear();
           navigation.navigate("Auth")

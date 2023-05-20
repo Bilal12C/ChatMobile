@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StyleSheet, View } from 'react-native';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,7 +8,6 @@ import Login from '../AuthScreens/Login';
 import Signup from '../AuthScreens/Signup';
 import Chat from '../HomeScreens/Chat';
 import Home from '../HomeScreens/Home';
-import Audio from '../HomeScreens/Audio';
 import UserProfile from '../HomeScreens/Profile';
 
 const HomeS = createNativeStackNavigator();
@@ -58,7 +56,7 @@ const Homestack =  () => {
     <HomeS.Navigator initialRouteName='Home'  screenOptions={{headerShown:false}}>
       <HomeS.Screen name='Home' component={Home}/>
       <HomeS.Screen name='Chat' component={Chat}/>
-      <HomeS.Screen name='Audio' component={Audio}/>
+      {/* <HomeS.Screen name='Audio' component={Audio}/> */}
       <HomeS.Screen name='UserProfile' component={UserProfile}/>
       <HomeS.Screen name='Auth' component={AuthStack}/>
     </HomeS.Navigator>

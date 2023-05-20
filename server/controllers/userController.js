@@ -5,7 +5,7 @@ const { use } = require("bcrypt/promises");
 module.exports.login = async (req, res, next) => {
   try {
     const { name, Password } = req.body;
-    // console.log("sd",name,Password)
+    console.log("sd",name,Password)
     const user = await User.findOne({ name });
     if (!user)
       return res.json({ msg: "Incorrect Username or Password", status: false });
@@ -62,7 +62,7 @@ module.exports.getAllUsers = async (req, res, next) => {
 
 module.exports.logOut = (req, res, next) => {
   try {
-    // console.log("Adasd",req.params.id)
+    console.log("Adasd",req.params.id)
     if (!req.params.id) return res.json({ msg: "User id is required " });
     onlineUsers.delete(req.params.id);
     return res.status(200).send();

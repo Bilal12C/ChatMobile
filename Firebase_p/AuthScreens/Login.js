@@ -10,6 +10,7 @@ const Login = ({navigation}) => {
   
   
   const [User , SetUser]=useState({name:'',Password:''})
+  
   const SetHandleText = (name,value) => {
     SetUser({
       ...User,

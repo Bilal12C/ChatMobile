@@ -1,14 +1,12 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Pressable, FlatList } from 'react-native'
 import { useEffect } from 'react'
 import React from 'react'
-import { Platform, } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { recieveMessageRoute, sendMessageRoute } from '../utils/Apiroutes';
 import axios from 'axios';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import { useState, useRef } from 'react';
 import IonicIcon from 'react-native-vector-icons/Ionicons';
-const screenWidth = Dimensions.get('screen').width;
 const audioRecorderPlayer = new AudioRecorderPlayer();
 const Chat = ({ route, navigation }) => {
 
@@ -71,7 +69,6 @@ const Chat = ({ route, navigation }) => {
     msgs.push({ fromSelf: true, message: msg,  })
     // type: 'msg'
     setMessages(msgs)
-    // console.log("messages", messages)
     setMsg('')
     // SetIcon(false)
   };
@@ -195,9 +192,6 @@ const Chat = ({ route, navigation }) => {
       <View style={styles.Header}>
         <IonicIcon onPress={() => navigation.navigate('Home')} style={{ paddingRight: 10 }} name='arrow-back-outline' size={20} color={'white'} />
         <Text style={{ color: 'white', fontSize: 20 }}>{chat.name}</Text>
-        {/* <Pressable onPress={() => navigation.navigate('Audio', { user: chat, socket: socket })} style={{ justifyContent: 'flex-end' }}>
-          <Text style={{ color: 'white' }}>Send Voice note</Text>
-        </Pressable> */}
       </View>
 
 
