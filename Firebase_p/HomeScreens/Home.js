@@ -93,12 +93,15 @@ export default Home
 
 const styles = StyleSheet.create({
   FlatListview: {
-    backgroundColor:'#202C33',
+    backgroundColor:'white',
     marginVertical: 15,
-    paddingHorizontal: 10,
-    paddingVertical: 15,
+    alignItems:'center',
+    paddingHorizontal: 5,
+    paddingVertical: 10,
     flexDirection: 'row',
-    height:heightPercentageToDP('12')
+    // marginHorizontal:15,
+    borderRadius:10,
+    // height:heightPercentageToDP('12')
   },
   ProfileView: {
     backgroundColor: 'black',
@@ -111,7 +114,8 @@ const styles = StyleSheet.create({
   name: {
     marginRight: 20,
     fontSize: 22,
-    marginLeft: 20
+    marginLeft: 20,
+    color:'black'
   },
   Header:{
     height: Dimensions.get('screen').height * 0.08,

@@ -306,6 +306,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 10,
     padding: 10,
+    marginRight:10,
     height: 40,
   },
   VoiceSend: {
@@ -323,7 +324,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    borderRadius: 20
+    borderRadius: 20,
+    color:'white'
   },
   recievemessage: {
     backgroundColor: '#202C33',
@@ -331,7 +333,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    borderRadius: 20
+    borderRadius: 20,
+    color:'white'
   },
   ChatInputtext: {
     backgroundColor: '#455A64',
