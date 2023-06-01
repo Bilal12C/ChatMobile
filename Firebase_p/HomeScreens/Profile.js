@@ -7,22 +7,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logoutRoute } from '../utils/Apiroutes';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-export default function UserProfile() {
+export default function UserProfile({route}) {
     let navigation = useNavigation();
-    const [currentuser, setcurrentuser] = useState(undefined);
-    useEffect(() => {
-        const fecthdata = async () => {
-          const data = await AsyncStorage.getItem('key');
-          const NEWDATA = JSON.parse(data)
-          if (NEWDATA) {
-            console.log("data", NEWDATA)
-            setcurrentuser(NEWDATA)
-          }
-        }
-        fecthdata();
-      }, [])
-
-
+ 
       const Logout = async () => {
         const id = currentuser._id;
         console.log("sdkfnkj",id)
@@ -39,24 +26,14 @@ export default function UserProfile() {
   return (
 
     <SafeAreaView style={tailwind`flex-1 bg-black`}>
-      <View style={tailwind`flex-1 items-center justify-center gap-6`}>
-        {
-            currentuser != undefined && currentuser != null ? (
-                <>                
+      <View style={tailwind`flex-1 items-center justify-center gap-6`}>        
                 <View style={styles.ProfileView}>
-                <Text style={tailwind`text-black text-5xl`}>{currentuser?.name[0]}</Text>
+                <Text style={tailwind`text-black text-5xl`}>{route?.params?.user?.name[0]}</Text>
                 </View>
                 <View style={tailwind`gap-1 items-center`}>
-                  <Text style={tailwind`text-white text-4xl font-bold`}>{currentuser.name}</Text>
-                  <Text style={tailwind`text-white text-lg`}>{currentuser.email}</Text>
+                  <Text style={tailwind`text-white text-4xl font-bold`}>{route?.params?.user?.name}</Text>
+                  <Text style={tailwind`text-white text-lg`}>{route?.params?.user?.email}</Text>
                 </View>
-                </>
-
-            ):(
-                null
-            )
-        }
-     
       </View>
       <View style={tailwind`flex-1 justify-center gap-8`}>
         <Pressable style={tailwind`flex-row items-center gap-2 px-8 mb-8  `}>
@@ -67,10 +44,17 @@ export default function UserProfile() {
           <Ionicons name="help-buoy-outline" size={24} color="#fff" />
           <Text style={tailwind`text-white text-lg ml-4`}>Help</Text>
         </Pressable>
-        <Pressable onPress={Logout} style={tailwind`flex-row items-center gap-2 px-8 mb-8`}>
-          <MaterialIcons name="logout" size={24} color="#fff" />
-          <Text style={tailwind`text-white text-lg ml-4`}>Logout</Text>
-        </Pressable>
+        {
+          route?.params?.title == 'user' ? (
+            <Pressable onPress={Logout} style={tailwind`flex-row items-center gap-2 px-8 mb-8`}>
+            <MaterialIcons name="logout" size={24} color="#fff" />
+            <Text style={tailwind`text-white text-lg ml-4`}>Logout</Text>
+          </Pressable>
+          ):(
+            null
+          )
+        }
+       
       </View>
     </SafeAreaView>
   );

@@ -13,6 +13,7 @@ import com.firebasep.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import com.dooboolab.audiorecorderplayer.RNAudioRecorderPlayerPackage;
+import com.imagepicker.ImagePickerPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -29,6 +30,7 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
+          new ImagePickerPackage();
           new RNAudioRecorderPlayerPackage();
           return packages;
         }

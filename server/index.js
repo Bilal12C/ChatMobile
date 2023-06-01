@@ -6,7 +6,12 @@ const messageRoutes = require("./routes/messages");
 const app = express();
 const socket = require("socket.io");
 const bodyParser = require("body-parser");
+const path = require('path');
 require("dotenv").config();
+
+
+
+
 
 app.use(cors());
 app.use(express.json());
@@ -23,16 +28,27 @@ mongoose
     console.log(err.message);
   });
 
+
+  
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
+app.use(express.static(path.join(__dirname, 'public')));
+
+
+app.get('/api/images/:filename', (req, res) => {
+  const { filename } = req.params;
+  console.log("dir",__dirname)
+  console.log("filename",filename)
+  const imagePath = path.join(__dirname, 'public', 'uploads', filename);
+   console.log("file path",imagePath)
+  res.sendFile(imagePath);
+});
 
 const server = app.listen(process.env.PORT, () =>
   console.log(`Server started on ${process.env.PORT}`)
 );
 
-app.get('/',(req,res)=>{
-  res.json("hello word")
-})
+
 const io = socket(server, {
   cors: {
     origin: "*",

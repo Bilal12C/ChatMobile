@@ -1,16 +1,16 @@
 import { StyleSheet, Text, View ,Image,TextInput,TouchableOpacity, Dimensions, Pressable, KeyboardAvoidingView,Alert} from 'react-native'
 import React ,{useState} from 'react';
-import GlobalStyles from '../GlobalStyles/GlobalStyles';
-import { Height } from '../Dimensions/ProjectDimension';
 import { loginRoute } from '../utils/Apiroutes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import tailwind from 'twrnc'
-const Login = ({navigation}) => {
+import { useNavigation } from '@react-navigation/native';
+import SocialIcons from './SocialIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
+const Login = () => {
   
-  
+  let navigation = useNavigation();
   const [User , SetUser]=useState({name:'',Password:''})
-  
+  const[hide,setHide] = useState(true)
   const SetHandleText = (name,value) => {
     SetUser({
       ...User,
@@ -49,51 +49,91 @@ const Login = ({navigation}) => {
   }
 
   return (
-    <View style={tailwind`flex-1 items-center justify-center bg-black`}>
-    <View style={tailwind`p-8 w-full max-w-sm`}>
-      <Text style={tailwind`text-5xl font-bold mb-6 text-white`}>Login</Text>
-
-      <TextInput
-        style={tailwind`w-full bg-white rounded-md h-12 px-4 mb-4 text-black`}
-        placeholderTextColor="#000"
-        placeholder="Enter Name"
-        value={User.name}
-        onChangeText={(val)=>SetHandleText('name',val)}
-
-      />
-
-      <TextInput
-        style={tailwind`w-full bg-white rounded-md h-12 px-4 mb-6 text-black`}
-        placeholderTextColor="#000"
-        placeholder="Enter password"
-        value={User.Password}
-        onChangeText={(val)=>SetHandleText('Password',val)}
-      />
-
-    
-      <Pressable
-        style={tailwind`h-12 border-2 border-white rounded-md flex flex-row justify-center items-center px-6 `}
-        onPress={Loginfun}
-      >
-        <View style={tailwind`flex-1 flex items-center`}>
-          <Text style={tailwind`text-white text-base font-medium`}>Login</Text>
+    <View style={styles.container}>
+        <Text style={styles.logo}>ChatApp</Text>
+        <View style={styles.inputView} >
+          <TextInput  
+            style={styles.inputText}
+            placeholder="Name..." 
+            value={User.name}
+            placeholderTextColor="#003f5c"
+            onChangeText={text => SetHandleText('name',text)}/>
         </View>
-      </Pressable>
-    </View>
-  </View>
+        <View style={styles.inputView} >
+          <TextInput  
+            secureTextEntry={hide ? true : false}
+            autoCapitalize="none"
+            autoCorrect={false}
+            underlineColorAndroid="transparent"
+            style={styles.inputText}
+            value={User.Password}
+            placeholder="Password..." 
+            placeholderTextColor="#003f5c"
+            onChangeText={text => SetHandleText('Password',text)}/>
+            <Icon onPress={()=>setHide(!hide)}  style={{paddingRight:10}} name={hide ? 'ios-eye-off-outline' :'ios-eye-outline'} size={25} color={'white'} />
+        </View>
+        
+        <TouchableOpacity onPress={Loginfun} style={styles.loginBtn}>
+          <Text style={styles.loginText}>LOGIN</Text>
+        </TouchableOpacity>
+        <TouchableOpacity  style={{marginTop:20,flexDirection:'row',alignItems:'center'}}>
+          <Text style={[styles.loginText,{marginRight:20}]}>Dont Have an Account ?</Text>
+          <Text onPress={()=>navigation.navigate('Signup')} style={[styles.loginText,{fontWeight:'900',fontSize:22}]}>Signup</Text>
+        </TouchableOpacity>
+        <Text style={[styles.loginText,{marginTop:20}]}>Or Sign in with</Text>
+        <SocialIcons/>
+      </View>
   )
 }
 
 export default Login
 
 const styles = StyleSheet.create({
-   ForgetPasswordView:{
-    height:Height/8,
-    justifyContent:'center',
-    alignItems:'center'
-   },
-   ForgetPasswordText:{
-    fontWeight:'700',
-    fontSize:Height*0.02
-   }
+  container: {
+    flex: 1,
+    backgroundColor: '#003f5c',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo:{
+    fontWeight:"bold",
+    fontSize:50,
+    color:"#fb5b5a",
+    marginBottom:40
+  },
+  inputView:{
+    width:"80%",
+    backgroundColor:"#465881",
+    borderRadius:25,
+    height:50,
+    marginBottom:20,
+    alignItems:'center',
+    justifyContent:'space-between',
+    paddingHorizontal:10,
+    // justifyContent:"center",
+    // padding:20,
+    flexDirection:'row'
+  },
+  inputText:{
+    height:50,
+    color:"white"
+  },
+  forgot:{
+    color:"white",
+    fontSize:11
+  },
+  loginBtn:{
+    width:"80%",
+    backgroundColor:"#fb5b5a",
+    borderRadius:25,
+    height:50,
+    alignItems:"center",
+    justifyContent:"center",
+    // marginTop:40,
+    marginBottom:10
+  },
+  loginText:{
+    color:"white",
+    fontSize:18
+  }
 })

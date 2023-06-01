@@ -188,7 +188,7 @@ const Chat = ({ route, navigation }) => {
 
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'black' }}>
+    <View style={{ flex: 1, backgroundColor: '#003f5c' }}>
       <View style={styles.Header}>
         <IonicIcon onPress={() => navigation.navigate('Home')} style={{ paddingRight: 10 }} name='arrow-back-outline' size={20} color={'white'} />
         <Text style={{ color: 'white', fontSize: 20 }}>{chat.name}</Text>
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
 
   },
   SendIcon: {
-    backgroundColor: '#075E54',
+    backgroundColor: '#202C33',
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
@@ -337,10 +337,10 @@ const styles = StyleSheet.create({
     color:'white'
   },
   ChatInputtext: {
-    backgroundColor: '#455A64',
+    backgroundColor: '#465881',
     paddingHorizontal: 12,
     color: 'white',
-    borderColor: 'black',
+    borderColor: '#465881',
     borderWidth: 1,
     borderRadius: 20,
     height: 40,

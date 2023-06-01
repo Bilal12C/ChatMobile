@@ -9,6 +9,7 @@ import Signup from '../AuthScreens/Signup';
 import Chat from '../HomeScreens/Chat';
 import Home from '../HomeScreens/Home';
 import UserProfile from '../HomeScreens/Profile';
+import Uploadimag from '../AuthScreens/Uploadimag';
 
 const HomeS = createNativeStackNavigator();
 const Auth = createNativeStackNavigator();
@@ -43,10 +44,11 @@ export default Index;
 
 const AuthStack =  () => {
     return(
-      <Auth.Navigator initialRouteName='Signup' screenOptions={{headerShown:false}}>  
+      <Auth.Navigator initialRouteName='Login' screenOptions={{headerShown:false}}>  
         <Auth.Screen name='Login' component={Login} />
         <Auth.Screen name='Signup' component={Signup} />
         <Auth.Screen name='Home' component={Homestack} />
+        <Auth.Screen name='Uploadimag' component={Uploadimag}/>
       </Auth.Navigator>
     )
 }
@@ -56,7 +58,6 @@ const Homestack =  () => {
     <HomeS.Navigator initialRouteName='Home'  screenOptions={{headerShown:false}}>
       <HomeS.Screen name='Home' component={Home}/>
       <HomeS.Screen name='Chat' component={Chat}/>
-      {/* <HomeS.Screen name='Audio' component={Audio}/> */}
       <HomeS.Screen name='UserProfile' component={UserProfile}/>
       <HomeS.Screen name='Auth' component={AuthStack}/>
     </HomeS.Navigator>
