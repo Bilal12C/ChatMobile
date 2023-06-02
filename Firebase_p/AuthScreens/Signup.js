@@ -6,7 +6,6 @@ import {
   Image,
   Alert, Pressable,
   TouchableOpacity,
-  Animated
 } from 'react-native';
 import React, { useState } from 'react';
 import { registerRoute } from '../utils/Apiroutes';
@@ -14,16 +13,16 @@ import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import { launchImageLibrary } from 'react-native-image-picker';
-import SocialIcons from './SocialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 const Signup = () => {
 
-
-   
   const [User, SetUser] = useState({ name: '', email: '', Password: '' })
   const [photo, setPhoto] = React.useState(null);
   let navigation = useNavigation();
   const[hide,setHide] = useState(true)
+
+
+
   const HandleInput = (name, val) => {
     SetUser({
       ...User,
@@ -37,25 +36,16 @@ const Signup = () => {
       if (User.email != '') {
         if (User.Password != '') {
           try {
-            console.log("photo data is", photo)
-            const formData = new FormData();
-            formData.append('name', User.name);
-            formData.append('email', User.email);
-            formData.append('password', User.Password);
-            formData.append('image', {
-              uri: photo.uri,
-              name: photo.fileName,
-              type: photo.type,
-            });
-            const response = await axios.post(registerRoute, formData, {
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'multipart/form-data',
-              }
-            });
+            const data = {
+              name:User.name,
+              email:User.email,
+              Password:User.Password,
+              pic:photo
+            }
+            const response = await axios.post(registerRoute,data);
             if (response.status == true) {
               alert("User Has Been Registered")
-              SetUser({ name: '', email: '', Password: '' })
+              navigation.navigate('Login')
             }
             else {
               alert(response.data.msg)
@@ -63,35 +53,11 @@ const Signup = () => {
 
           } catch (error) {
             console.log('Signup error:', error);
-            // Handle error
           }
 
         }
       }
     }
-
-
-    //       const {name , email , Password } = User;
-    //       console.log("usee n",name,email,Password)
-    //       const { data } = await axios.post(registerRoute, {
-    //         name,
-    //         email,
-    //         Password,
-    //       });
-
-    //       console.log("daata",data)
-    //       if(data.status === true){
-    //         alert(data.msg)
-    //         SetUser({name:'',email:'',Password:''})
-    //         navigation.navigate('Login')
-    //       }
-    //       else if (data.status == false){
-    //         alert(data.msg)
-    //       }
-    //     } catch (error) {
-    //       console.error(error);
-    //     }
-    //   }
 
     else {
       alert("All the Fields should be filled")
@@ -99,11 +65,36 @@ const Signup = () => {
   }
 
 
+  const cloudinaryUpload = (photo) => {
+    const data = new FormData()
+    data.append('file', photo)
+    data.append('upload_preset', 'ImageFroChat')
+    data.append("cloud_name", "chatapp1")
+    fetch("https://api.cloudinary.com/v1_1/chatapp1/upload", {
+      method: "post",
+      body: data
+    }).then(res => res.json()).
+      then(data => {
+        console.log("da",data)
+        setPhoto(data?.secure_url)
+      }).catch(err => {
+        Alert.alert("An Error Occured While Uploading")
+      })
+  }
+  
   const handleChoosePhoto = () => {
     launchImageLibrary({ noData: true }, (response) => {
       console.log(response.assets[0].uri);
       if (response) {
-        setPhoto(response.assets[0]);
+        const uri = response.assets[0].uri;
+        const type = response.assets[0].type;
+        const name = response.assets[0].fileName;
+        const source = {
+          uri,
+          type,
+          name,
+        }
+        cloudinaryUpload(source)
       }
     });
   };
@@ -113,7 +104,7 @@ const Signup = () => {
     <View style={styles.container}>
       <View style={{ marginTop: 20, marginBottom: 20,  justifyContent: 'center', alignItems: 'center' }}>
         <Image
-          source={photo == null ? require('../Assets/download.png') : { uri: photo.uri }}
+          source={photo == null ? require('../Assets/download.png') : { uri: photo }}
           style={{ height: 90, width: 90, borderRadius: 50,position: 'relative', resizeMode: 'contain' }}
         />
         <Icon
@@ -164,8 +155,6 @@ const Signup = () => {
         <Text onPress={() => navigation.navigate('Login')} style={[styles.loginText, { fontWeight: '900', fontSize: 22 }]}>Login</Text>
       </TouchableOpacity>
       <Text style={[styles.loginText,{marginTop:10}]}>Or Sign up with</Text>
-      <SocialIcons/>
-      {/* </View> */}
     </View>
   );
 }

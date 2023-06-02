@@ -9,7 +9,6 @@ import Signup from '../AuthScreens/Signup';
 import Chat from '../HomeScreens/Chat';
 import Home from '../HomeScreens/Home';
 import UserProfile from '../HomeScreens/Profile';
-import Uploadimag from '../AuthScreens/Uploadimag';
 
 const HomeS = createNativeStackNavigator();
 const Auth = createNativeStackNavigator();
@@ -20,7 +19,6 @@ const Index = () => {
     const FetchToken = async () => {
       const data = await AsyncStorage.getItem('key')
       const Parsestring = JSON.parse(data)
-      console.log("oa",Parsestring)
        if(data!==undefined || data !== null){
         SetLoggedin(Parsestring)
        }
@@ -48,7 +46,6 @@ const AuthStack =  () => {
         <Auth.Screen name='Login' component={Login} />
         <Auth.Screen name='Signup' component={Signup} />
         <Auth.Screen name='Home' component={Homestack} />
-        <Auth.Screen name='Uploadimag' component={Uploadimag}/>
       </Auth.Navigator>
     )
 }

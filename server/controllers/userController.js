@@ -21,27 +21,24 @@ module.exports.login = async (req, res, next) => {
 
 module.exports.register = async (req, res, next) => {
   try {
-    console.log("name",req.body)
-    const { name, email, password } = req.body;
-    console.log("req.file.patgh",req.file.path)
-    const image = req.file ? req.file.path : '';
-    console.log("image",image)
+    
+    const { name, email, Password , pic } = req.body;
+    console.log(name,email,Password,pic)
     const finduser = await User.findOne({ email: email });
     console.log("finduser",finduser)
     if (finduser)
     return res.json({ msg: "Email already used", status: false });
-   
     if (!finduser) {
-      const hash = await bcrypt.hash(password,10);
+      const hash = await bcrypt.hash(Password,10);
      const user = await User.create({
       name: name,
       email: email,
       Password: hash,
-      Image:image
+      Image:pic
     });
     console.log("user",user)
     return res.json({ status: true, msg:"User has been Registered" });
-  }
+    }
   } catch (error) {
       res.status(400).send({msg:"User already exists",status:200})
   }
@@ -56,6 +53,7 @@ module.exports.getAllUsers = async (req, res, next) => {
       "email",
       "name",
       "_id",
+      "Image"
     ]);
     // console.log("user",users)
     return res.json(users);

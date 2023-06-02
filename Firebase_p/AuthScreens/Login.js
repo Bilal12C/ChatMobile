@@ -4,7 +4,6 @@ import { loginRoute } from '../utils/Apiroutes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-import SocialIcons from './SocialIcons';
 import Icon from 'react-native-vector-icons/Ionicons';
 const Login = () => {
   
@@ -81,7 +80,6 @@ const Login = () => {
           <Text onPress={()=>navigation.navigate('Signup')} style={[styles.loginText,{fontWeight:'900',fontSize:22}]}>Signup</Text>
         </TouchableOpacity>
         <Text style={[styles.loginText,{marginTop:20}]}>Or Sign in with</Text>
-        <SocialIcons/>
       </View>
   )
 }

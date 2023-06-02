@@ -7,7 +7,6 @@ import axios from 'axios';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import { useState, useRef } from 'react';
 import IonicIcon from 'react-native-vector-icons/Ionicons';
-const audioRecorderPlayer = new AudioRecorderPlayer();
 const Chat = ({ route, navigation }) => {
 
 
@@ -16,19 +15,6 @@ const Chat = ({ route, navigation }) => {
   const chat = route.params.user;
   const socket = route.params.socket;
   const [arrivalmessages, setArrivalmsg] = useState(undefined)
-  const [icon, SetIcon] = useState(false)
-
-  const [State, SetState] = useState({
-    recordSecs: 0,
-    recordTime: '00:00:00',
-    currentPositionSec: 0,
-    currentDurationSec: 0,
-    playTime: '00:00:00',
-    duration: '00:00:00',
-  })
-  const [path, setPath] = useState([])
-  const [isRecording, setRecording] = useState(false)
-  let [PlayWidth, setPlaywidth] = useState(0)
 
 
   useEffect(() => {
@@ -63,39 +49,17 @@ const Chat = ({ route, navigation }) => {
       to: chat._id,
       from: userdata._id,
       message: msg,
-      // type: 'msg'
     })
     const msgs = [...messages]
     msgs.push({ fromSelf: true, message: msg,  })
-    // type: 'msg'
     setMessages(msgs)
     setMsg('')
-    // SetIcon(false)
   };
+  
 
 
 
-  const SendVoice = async () => {
-    const result = await audioRecorderPlayer.stopRecorder();
-    audioRecorderPlayer.removeRecordBackListener();
-    SetState({
-      ...State,
-      recordSecs: 0,
-    });
-    setRecording(false)
-    const data = await AsyncStorage.getItem('key')
-    const userdata = JSON.parse(data)
-    socket.current.emit('send-msg', {
-      to: chat._id,
-      from: userdata._id,
-      message: path,
-      type: 'audio'
-    })
-    const msgs = [...messages]
-    msgs.push({ fromSelf: true, message: path, type: 'audio' })
-    console.log("message", msgs)
-    setMessages(msgs)
-  }
+ 
 
 
   const flatListRef = useRef(null);
@@ -104,12 +68,7 @@ const Chat = ({ route, navigation }) => {
     flatListRef.current.scrollToEnd();
   };
 
-  // useEffect(() => {
-  //   if (!PlayWidth) {
-  //     PlayWidth = 0;
-  //   }
-  // }, [])
-
+ 
   useEffect(() => {
     if (socket.current) {
       socket.current.on("msg-recieve", (data) => {
@@ -121,52 +80,8 @@ const Chat = ({ route, navigation }) => {
 
 
 
-  const onStartPlay = async (audio) => {
-    try {
-     
 
-      console.log("path",audio)
-      const msg = await audioRecorderPlayer.startPlayer(audio.message);
-      audioRecorderPlayer.setVolume(1.0)
-      console.log("adad", msg);
-      audioRecorderPlayer.addPlayBackListener((e) => {
-        if (e.currentPosition === e.duration) {
-          console.log('finished');
-          audioRecorderPlayer.stopPlayer();
-        }
-        SetState({
-          currentPositionSec: e.currentPosition,
-          currentDurationSec: e.duration,
-          playTime: audioRecorderPlayer.mmssss(e.currentPosition),
-          duration: audioRecorderPlayer.mmssss(e.duration),
-        });
-      });
 
-    } catch (error) {
-      alert("error", error)
-    }
-
-  };
-
-  const onStartRecord = async () => {
-    setRecording(true)
-    const uri = await audioRecorderPlayer.startRecorder();
-    audioRecorderPlayer.addRecordBackListener((e) => {
-      SetState({
-        ...State,
-        recordSecs: e.currentPosition,
-        recordTime: audioRecorderPlayer.mmssss(
-          Math.floor(e.currentPosition),
-        ),
-      });
-      console.log(`uri: ${uri}`);
-      setPath(uri)
-      // setMessages({ fromSelf: true, message: uri, type: 'audio' })
-      // let ScreenPlay = (e.currentPosition / e.duration) * (screenWidth - 20);
-      // setPlaywidth(ScreenPlay);
-    });
-
-  }
 
 
   
@@ -177,11 +92,9 @@ const Chat = ({ route, navigation }) => {
   const onchangevalue = (val) => {
     if (val != '') {
       setMsg(val)
-      SetIcon(true)
     }
     else {
       setMsg('')
-      SetIcon(false)
     }
 
   }
@@ -218,56 +131,18 @@ const Chat = ({ route, navigation }) => {
         
       }
 
-{/* 
-      {
-        messages.length > 0 ? (
-          <FlatList
-            keyExtractor={(item, index) => index.toString()}
-            data={messages}
-            style={{ marginBottom: 40 }}
-            onContentSizeChange={handleContentSizeChange}
-            ref={flatListRef}
-            renderItem={({ item, index }) => (
-              <Pressable key={item.id}>
-
-                {
-                  item.message != '' ? (
-                    item.type == 'msg' ? (
-                      <View style={item.fromSelf == true ? { alignSelf: 'flex-start' } : { alignSelf: 'flex-end' }}>
-                        <Text style={item.fromSelf == true ? styles.sendmessage : styles.recievemessage}>{item.message}</Text>
-                      </View>
-                    ) : (
-                      <View style={item.fromSelf == true ? { alignSelf: 'flex-start', backgroundColor: '#075E54', height: 40, width: 150, flexDirection: 'row', margin: 20, justifyContent: 'space-around', alignItems: 'center' } : { alignSelf: 'flex-end', backgroundColor: '#075E54', height: 40, width: 150, flexDirection: 'row', margin: 20, justifyContent: 'space-around', alignItems: 'center' }}>
-                        <IonicIcon onPress ={()=>onStartPlay(item)} style={{ paddingRight: 10 }} name='play' size={20} color={'white'} />
-                        <Text>{State.playTime} / {State.duration}</Text>
-                      </View>
-                    )
-                  ) : (null)}
-
-              </Pressable>
-
-            )}
-          />
-
-        ) : (
-          null
-        )
-
-      } */}
-
-
 
       <View style={styles.ChatInputView}>
         <TextInput
           onFocus={() => console.log("dfsf")}
           value={msg}
           style={styles.ChatInputtext}
-          placeholder={isRecording ? State.recordTime : 'send message'}
+          placeholder={'send message'}
           placeholderTextColor={'white'}
           onChangeText={(value) => { onchangevalue(value) }}
         />
-        <Pressable onPress={handleSendMsg} style={isRecording ? styles.VoiceSend : styles.SendIcon}  >
-          <IonicIcon name={icon ? 'send-sharp' : 'mic'} size={20} color={'white'} />
+        <Pressable onPress={handleSendMsg}  style={styles.SendIcon}  >
+          <IonicIcon name={'send-sharp'} size={20} color={'white'} />
         </Pressable>
       </View>
       <View>
@@ -300,7 +175,7 @@ const styles = StyleSheet.create({
 
   },
   SendIcon: {
-    backgroundColor: '#202C33',
+  backgroundColor: 'black',
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
