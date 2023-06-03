@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import AnimatedLottieView from 'lottie-react-native';
 const Login = () => {
   
   let navigation = useNavigation();
@@ -69,7 +70,7 @@ const Login = () => {
             placeholder="Password..." 
             placeholderTextColor="#003f5c"
             onChangeText={text => SetHandleText('Password',text)}/>
-            <Icon onPress={()=>setHide(!hide)}  style={{paddingRight:10}} name={hide ? 'ios-eye-off-outline' :'ios-eye-outline'} size={25} color={'white'} />
+            <Icon onPress={()=>setHide(!hide)}  style={{paddingRight:10,width:'40%'}} name={hide ? 'ios-eye-off-outline' :'ios-eye-outline'} size={25} color={'white'} />
         </View>
         
         <TouchableOpacity onPress={Loginfun} style={styles.loginBtn}>
@@ -79,7 +80,6 @@ const Login = () => {
           <Text style={[styles.loginText,{marginRight:20}]}>Dont Have an Account ?</Text>
           <Text onPress={()=>navigation.navigate('Signup')} style={[styles.loginText,{fontWeight:'900',fontSize:22}]}>Signup</Text>
         </TouchableOpacity>
-        <Text style={[styles.loginText,{marginTop:20}]}>Or Sign in with</Text>
       </View>
   )
 }
@@ -114,7 +114,9 @@ const styles = StyleSheet.create({
   },
   inputText:{
     height:50,
-    color:"white"
+    color:"white",
+    width:'90%',
+    // backgroundColor:'red'
   },
   forgot:{
     color:"white",

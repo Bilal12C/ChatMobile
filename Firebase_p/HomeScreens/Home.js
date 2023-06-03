@@ -1,4 +1,4 @@
-import { Dimensions, FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Dimensions, FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react';
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,11 +14,12 @@ const Home = () => {
   const [currentuser, setcurrentuser] = useState(undefined);
   const socket = useRef();
   const [contacts, setContacts] = useState([]);
-  const [currentchat, setCurrentChat] = useState(undefined);
-  const [showUser, SetUser] = useState(false)
-
+  const[loading , setLoading] =  useState(false)
+  const[showonline,setShowOnline]  = useState('')
+  const[datetime,showdatetime] = useState()
   useEffect(() => {
     const fecthdata = async () => {
+
       const data = await AsyncStorage.getItem('key');
       const NEWDATA = JSON.parse(data)
       if (NEWDATA) {
@@ -30,11 +31,17 @@ const Home = () => {
   }, [])
 
 
-  const SetCurrentchat = () => {
-    console.log("ss", currentchat)
-    naviagtion.navigate('Chat', { user: currentchat, socket: socket })
+  
 
+  const SetCurrentchatfun = (item) => {
+    naviagtion.navigate('Chat', { user: item, socket: socket , setShowOnline:setShowOnline})
   }
+
+  
+ 
+
+   
+
   useEffect(() => {
     if (currentuser) {
       socket.current = io(host);
@@ -42,81 +49,66 @@ const Home = () => {
     }
   }, [currentuser])
 
+
+
+
   useEffect(() => {
     getAllusers();
   }, [currentuser])
 
   const getAllusers = async () => {
     if (currentuser) {
+      setLoading(true)
       const data = await axios.get(`${allUsersRoute}/${currentuser._id}`);
       console.log(data.data)
+      setLoading(false)
       setContacts(data.data)
     }
   }
 
 
 
+  const setProfile = () => {
+    if(currentuser){
+      naviagtion.navigate('UserProfile', { user: currentuser, title:'user' })
+    }
+    
 
-  const setProfileuser = (item, index) => {
-    SetUser(!showUser)
-    console.log(item, index)
-    setCurrentChat(item)
   }
 
-  const ViewProfile = () => {
-    if (showUser) {
-      naviagtion.navigate('UserProfile', { user: currentchat, title: 'chatuser' })
-    }
-    else {
-      naviagtion.navigate('UserProfile', { user: currentuser, title: 'user' })
-    }
-  }
 
+
+
+  
 
   return (
     <View style={styles.container}>
       <View style={styles.loginBtn}>
         <Text style={{ fontSize: 23, color: 'white' }}>ChatApp</Text>
-        <Pressable onPress={ViewProfile}>
+        <Pressable onPress={setProfile}>
           <IonicIcon name='reorder-four-outline' size={20} color={'white'} />
         </Pressable>
       </View>
 
-      {
-        showUser ? (
-          <View style={{ paddingHorizontal: 20, marginTop: 20, marginBottom: 20, backgroundColor: '#465881', paddingVertical: 20, marginHorizontal: 10 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', paddingLeft: 20 }}>
-              <Image
-                source={{ uri: currentchat.Image }}
-                style={{ width: 50, height: 50, borderRadius: 50 / 2 }}
-              />
-              <Text style={[styles.name, { color: '#FFFFFF' ,marginLeft:20}]}>{currentchat.name}</Text>
-            </View>
-            <View style={styles.HorizontalLine} />
-
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 20 }}>
-              <Pressable onPress={SetCurrentchat} style={[styles.loginBtn, { width: '45%', backgroundColor: 'silver', height: 40, borderRadius: 20 }]}>
-                <Text style={[styles.name, { color: 'black', fontSize: 18 , textAlign:'center',width:'100%'}]}>Text Him</Text>
-              </Pressable>
-              <Pressable onPress={ViewProfile} style={[styles.loginBtn, { width: '45%', height: 40, borderRadius: 20 }]}>
-                <Text style={[styles.name, { color: '#FFFFFF', fontSize: 14,textAlign:'center' ,width:'100%'}]}>View Profile</Text>
-              </Pressable>
-            </View>
-          </View>
-        ) : null
-      }
-
+     
+      {loading ? (
+        <View style={styles.contentWait}>
+          <ActivityIndicator size={20} color={'black'} />
+          <Text style={styles.main}>Please Wait</Text>
+        </View>
+      ) : null}
       {
         contacts.length > 0 ? (
           <FlatList
             data={contacts}
             renderItem={({ item, index }) => (
-              <Pressable onPress={() => { setProfileuser(item, index) }} style={styles.FlatListview}>
+              <Pressable onPress={() => { SetCurrentchatfun(item, index) }} style={styles.FlatListview}>
                 <Image
                   source={{ uri: item.Image }}
                   style={{ width: 50, height: 50, borderRadius: 50 / 2 }}
                 />
                 <Text style={[styles.name,{marginLeft:20}]}>{item.name}</Text>
+                <Text>{showonline._id == item.id ? showonline : ''}</Text>
               </Pressable>
             )}
           />
@@ -141,6 +133,18 @@ const styles = StyleSheet.create({
     // marginHorizontal:15,
     borderRadius: 10,
     // height:heightPercentageToDP('12')
+  },
+  ActivityIndicator: {
+    flex: 1,
+    alignSelf: 'center',
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height,
+    // position: 'absolute',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: 30,
+    zIndex: 1,
+    opacity: 0.9,
   },
   ProfileView: {
     backgroundColor: 'black',
@@ -184,6 +188,26 @@ const styles = StyleSheet.create({
     marginTop: Dimensions.get('screen').height * 0.02,
     // marginBottom: Dimensions.get('screen').height * 0.02,
     alignSelf: 'center',
+  },
+  contentWait: {
+    // flex: 1,
+    position: 'absolute',
+    zIndex: 1,
+    width: '100%',
+    height: Dimensions.get('window').height,
+    backgroundColor: 'rgba(0, 0, 0, 0.43)',
+    fontSize: 22,
+    justifyContent: 'center',
+    // marginTop: -20,
+    alignItems: 'center',
+  },
+  main: {
+    color: '#FFF',
+    backgroundColor: 'transparent',
+    padding: 10,
+    fontSize: 16,
+
+    paddingLeft: 0,
   },
 
 })

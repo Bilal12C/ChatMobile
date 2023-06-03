@@ -1,4 +1,4 @@
-import { SafeAreaView, View, Text, Pressable, StyleSheet, Dimensions, FlatList, Alert } from 'react-native';
+import { SafeAreaView, View, Text, Pressable, StyleSheet, Dimensions, FlatList, Alert, ActivityIndicator} from 'react-native';
 import tailwind from 'twrnc';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logoutRoute } from '../utils/Apiroutes';
@@ -36,6 +36,7 @@ export default function UserProfile({ route }) {
             <Image
               source={{ uri: route?.params?.user?.Image }}
               style={{ width: 80, height: 80, borderRadius: 180 / 2, marginTop: 30 }}
+              PlaceholderContent={<ActivityIndicator size={'small'} color='black' />}
             />
             <View style={tailwind`gap-1 ml-5`}>
               <Text style={tailwind`text-white text-xl font-bold`}>{route?.params?.user?.name}</Text>
@@ -46,7 +47,7 @@ export default function UserProfile({ route }) {
           <View style={{alignItems: 'center', paddingHorizontal: 20 }}>
           <Image
             source={{ uri: route?.params?.user?.Image }}
-            style={{ width: 160, height: 160, borderRadius: 160 / 2, marginTop: 30 }}
+            style={{ width: 160, height: 160, borderRadius: 160 / 2, marginTop: 30,resizeMode:'contain' }}
           />
           <View style={{marginTop:20}} >
             <Text style={{textAlign:'center',fontSize:28,color:'#FFFFFF'}}>{route?.params?.user?.name}</Text>

@@ -154,7 +154,6 @@ const Signup = () => {
         <Text style={[styles.loginText, { marginRight: 20 }]}>Already Have an Account ?</Text>
         <Text onPress={() => navigation.navigate('Login')} style={[styles.loginText, { fontWeight: '900', fontSize: 22 }]}>Login</Text>
       </TouchableOpacity>
-      <Text style={[styles.loginText,{marginTop:10}]}>Or Sign up with</Text>
     </View>
   );
 }
