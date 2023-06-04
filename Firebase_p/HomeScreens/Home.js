@@ -15,8 +15,6 @@ const Home = () => {
   const socket = useRef();
   const [contacts, setContacts] = useState([]);
   const[loading , setLoading] =  useState(false)
-  const[showonline,setShowOnline]  = useState('')
-  const[datetime,showdatetime] = useState()
   useEffect(() => {
     const fecthdata = async () => {
 
@@ -34,7 +32,7 @@ const Home = () => {
   
 
   const SetCurrentchatfun = (item) => {
-    naviagtion.navigate('Chat', { user: item, socket: socket , setShowOnline:setShowOnline})
+    naviagtion.navigate('Chat', { user: item, socket: socket })
   }
 
   
@@ -108,7 +106,6 @@ const Home = () => {
                   style={{ width: 50, height: 50, borderRadius: 50 / 2 }}
                 />
                 <Text style={[styles.name,{marginLeft:20}]}>{item.name}</Text>
-                <Text>{showonline._id == item.id ? showonline : ''}</Text>
               </Pressable>
             )}
           />

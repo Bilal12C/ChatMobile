@@ -46,16 +46,7 @@ io.on("connection", (socket) => {
      console.log("A user is online",userId)
   })
 
-  socket.on('status',(to)=>{
-    const from  = to.from._id
-    const sendUserSocket = onlineUsers.get(to.to._id);
-    console.log("from",sendUserSocket)
-    if (sendUserSocket) {
-      console.log("is user avalible or not",sendUserSocket)
-      socket.to(sendUserSocket).emit('Typing',to)
-    }
   
-  })
 
   socket.on("add-user", (userId) => {
     onlineUsers.set(userId, socket.id);

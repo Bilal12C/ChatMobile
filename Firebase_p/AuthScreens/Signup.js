@@ -20,7 +20,7 @@ const Signup = () => {
   const [photo, setPhoto] = React.useState(null);
   let navigation = useNavigation();
   const[hide,setHide] = useState(true)
-
+  const emailRegex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/
 
 
   const HandleInput = (name, val) => {
@@ -32,36 +32,53 @@ const Signup = () => {
 
 
   const SignupB = async () => {
-    if (User.name != '') {
-      if (User.email != '') {
-        if (User.Password != '') {
-          try {
-            const data = {
-              name:User.name,
-              email:User.email,
-              Password:User.Password,
-              pic:photo
-            }
-            const response = await axios.post(registerRoute,data);
-            if (response.status == true) {
-              alert("User Has Been Registered")
-              navigation.navigate('Login')
-            }
-            else {
-              alert(response.data.msg)
-            }
+    if(User.name == ''){
+      Alert.alert("Field Missing","Username cannot be Empty")
+      return false
+    }
 
-          } catch (error) {
-            console.log('Signup error:', error);
-          }
+    if(User.email == ''){
+      Alert.alert("Field Missing","email cannot be Empty")
+      return false
+    }
 
-        }
+    if(User.Password == ''){
+      Alert.alert("Field Missing","Password cannot be Empty")
+      return false
+    }
+
+    if(photo == null){
+      Alert.alert("Field Missing","Pic should be selected in order to Signup")
+      return false
+    }
+
+    if(!emailRegex.test(User.email)){
+    Alert.alert("Invalid Email Formt")
+    return false
+    }
+
+    try {
+      const data = {
+        name:User.name,
+        email:User.email,
+        Password:User.Password,
+        pic:photo
       }
+      const response = await axios.post(registerRoute,data);
+      if (response.data.status == true) {
+        alert(response.data.msg)
+        SetUser({name:'',email:'',Password:''})
+        navigation.navigate('Login')
+      }
+      else {
+        alert(response.data.msg)
+      }
+
+    } catch (error) {
+      console.log('Signup error:', error);
     }
 
-    else {
-      alert("All the Fields should be filled")
-    }
+    
   }
 
 
@@ -181,7 +198,8 @@ const styles = StyleSheet.create({
   },
   inputText: {
     height: 50,
-    color: "white"
+    color: "white",
+    width:'80%'
   },
   loginBtn: {
     width: "80%",

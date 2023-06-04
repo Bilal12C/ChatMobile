@@ -13,19 +13,8 @@ const Chat = ({ route, navigation , setchecstate }) => {
   const [msg, setMsg] = useState("");
   const [messages, setMessages] = useState([]);
   const chat = route.params.user;
-  const[me,setme]=useState('')
-  // console.log("route", route)
   const socket = route.params.socket;
   const [arrivalmessages, setArrivalmsg] = useState(undefined)
-  const [showonline, setShowOnline] = useState('')
-
-
-  useEffect(()=>{
-    if(chat){
-     socket.current.emit('online',chat)
-     setShowOnline('online')
-    }
-   },[])
 
   useEffect(() => {
     const GetAllMessages = async () => {
@@ -33,7 +22,6 @@ const Chat = ({ route, navigation , setchecstate }) => {
         const sggh = JSON.stringify(chat)
         const data = await AsyncStorage.getItem('key')
         const userdata = JSON.parse(data)
-        setme(userdata)
         const respose = await axios.post(recieveMessageRoute, {
           from: userdata._id,
           to: chat._id
@@ -86,34 +74,6 @@ const Chat = ({ route, navigation , setchecstate }) => {
   
 
 
-  useEffect(() => {
-    let timeoutId;
-  
-    const handleTyping = (data) => {
-      console.log("arrived msg", data);
-      setShowOnline('Typing......');
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-  
-      timeoutId = setTimeout(() => {
-        setShowOnline('online');
-      }, 200);
-    };
-  
-    if (socket.current) {
-      socket.current.on("Typing", handleTyping);
-    }
-  
-    return () => {
-      setShowOnline('online');
-      if (socket.current) {
-        socket.current.off("Typing", handleTyping);
-      }
-      clearTimeout(timeoutId);
-    };
-  }, []);
-  
 
 
 
@@ -130,13 +90,7 @@ const Chat = ({ route, navigation , setchecstate }) => {
 
   const onchangevalue = (val) => {
     if (val != '') {
-      const data = {
-         to : chat,
-         from:me
-      }
-      socket.current.emit('status',(data))
-      // route?.params?.setShowOnline(data.to)
-      setMsg(val)
+    setMsg(val)
     }
     else {
       setMsg('')
@@ -169,7 +123,6 @@ const Chat = ({ route, navigation , setchecstate }) => {
           />
           <View style={{marginLeft:20}}>
             <Text style={{ color: 'white', fontSize: 20, }}>{chat.name}</Text>
-            <Text style={{ color: 'white', fontSize: 14 }} >{showonline}</Text>
           </View>
         </View>
 
